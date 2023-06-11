@@ -1,0 +1,13 @@
+{
+	"manifest_version": 3,
+	"name": "Ranobehub Character Counter",
+	"version": "1.0",
+	"permissions": ["activeTab"],
+	"content_scripts": [
+		{
+			"matches": ["*://ranobehub.org/ranobe/*/*"],
+			"js": ["jquery-3.7.0.min.js", "content.js"],
+			"run_at": "document_idle"
+		}
+	]
+}
