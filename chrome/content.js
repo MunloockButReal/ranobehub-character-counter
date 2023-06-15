@@ -57,40 +57,40 @@ function initializeContentScript() {
 }
 
 function replaceTotalSymbols() {
-	// PC segment
 	let pcElement = $('.book-meta-value.book-stats');
-
 	let pcChapterElement = pcElement.find('strong');
 	let pcAuthorSheetsElement = pcElement.find('i.question.outline.circle.icon.__tooltip');
 	let pcOriginalBookElement = pcElement.find('.book-stats__original');
 
-	// Mobile segment
 	let mobileElement = $('#section-information');
 	let mobileBookNotes = mobileElement.find('.book-notes').find('p');
 	let mobileLinks = mobileElement.find('.ui.small.feed.ranobe-links');
 
-	mobileElement.find('.book-notes').empty();
-	let mobileOriginal = mobileElement.find('p')[1];
-	let mLinks = $(`<strong>Ссылки:</strong>`).append(mobileLinks);
-	mobileElement.empty();
-
-	// Extract the chapter and author's sheets information
 	let chapters = pcChapterElement.text().trim();
 	let authorSheetsData = pcAuthorSheetsElement.attr('data-tippy-content');
-	let authorSheets = authorSheetsData.match(/\d+/g)[1] || 0; // Extracts all numbers from the string
+	let authorSheets = (authorSheetsData.match(/\d+/g) || [0])[1]; // Extracts the second number from the string or default to 0
 
 	let totalSymbols = authorSheets * 40000;
 	let totalSymbolsM = (totalSymbols / 1000000).toFixed(2);
 	let averageSymbols = Math.floor(totalSymbols / chapters);
 
-	pcElement.html(`<p><strong>${chapters}</strong> глав на русском</p>
-	<p style="font-size: 12px; color: whitesmoke"><strong>${totalSymbolsM}M</strong> знаков, <strong>${authorSheets}</strong> авторских листов, (${averageSymbols} в среднем)</p>`);
+	pcElement
+		.html(
+			`<p><strong>${chapters}</strong> глав на русском</p>
+	  <p style="font-size: 12px; color: whitesmoke"><strong>${totalSymbolsM}M</strong> знаков, <strong>${authorSheets}</strong> авторских листов, (${averageSymbols} в среднем)</p>`
+		)
+		.append(pcOriginalBookElement);
 
-	let mobileTranslated = `<p><strong>Переведено:</strong> ${chapters} глав; ${totalSymbolsM}M зн. ${authorSheets} а.л., (${averageSymbols} в среднем)</p>`;
+	let mobileTranslated = $(
+		`<p><strong>Переведено:</strong> ${chapters} глав; ${totalSymbolsM}M зн. ${authorSheets} а.л., (${averageSymbols} в среднем)</p>`
+	);
 
-	pcElement.append(pcOriginalBookElement);
-	mobileElement.append(mobileBookNotes, mobileTranslated, mobileOriginal, mLinks);
+	let mobileOriginal = mobileElement.find('p:contains("В оригинале")');
+	let mLinks = $('<strong>Ссылки:</strong>').append(mobileLinks);
+
+	mobileElement.empty().append(mobileBookNotes, mobileTranslated, mobileOriginal, mLinks);
 }
+
 // Checking if the current page is a chapter page
 let urlPatternChapter = /ranobehub.org\/ranobe\/\d+\/\d+\/\d+/;
 
