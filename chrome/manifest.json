@@ -5,8 +5,9 @@
 	"permissions": ["activeTab"],
 	"content_scripts": [
 		{
-			"matches": ["*://ranobehub.org/ranobe/*/*"],
+			"matches": ["*://ranobehub.org/*"],
 			"js": ["jquery-3.7.0.min.js", "content.js"],
+			"css": ["styles.css"],
 			"run_at": "document_idle"
 		}
 	]
