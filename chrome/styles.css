@@ -2,3 +2,8 @@
 	display: grid;
 	align-content: center;
 }
+
+.paragraph-bookmark {
+	background-color: #424242;
+	color: #d4d4d4;
+}

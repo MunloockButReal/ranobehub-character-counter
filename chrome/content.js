@@ -1,3 +1,6 @@
+let readingSpeed = 180;
+myStorage = window.localStorage;
+
 // Function to count characters in a text
 function countCharacters(text) {
 	const charactersWithSpaces = text.length;
@@ -19,14 +22,61 @@ function countImages(chapterElement) {
 // Function to update chapter title with character count, image count, and word count
 function updateChapterTitle(chapterElement) {
 	const chapterTitleElement = chapterElement.querySelector('h1.ui.header');
+	let chapterID;
+	if (chapterTitleElement) chapterID = chapterTitleElement.getAttribute('data-id');
+
 	if (chapterTitleElement) {
 		const chapterText = chapterTitleElement.innerText;
-		const chapterContent = Array.from(chapterElement.querySelectorAll('p'))
+		const chapterAllP = chapterElement.querySelectorAll('p');
+		const chapterContent = Array.from(chapterAllP)
 			.map((p) => p.textContent)
 			.join(' ');
+
+		// Adding P bookmark
+		let prevElement = null;
+		let pBookmark = JSON.parse(myStorage.getItem('pBookmark')) || {};
+		let url = window.location.href.split('/').slice(-3);
+
+		console.log(pBookmark);
+		if (typeof pBookmark[chapterID] == 'number') {
+			p = chapterAllP[pBookmark[chapterID]];
+			$(p).addClass('paragraph-bookmark');
+			prevElement = p;
+		}
+
+		chapterAllP.forEach((p) => {
+			$(p).on('click', () => {
+				pBookmark[chapterID] = Array.from(chapterAllP).indexOf(p);
+
+				if (prevElement !== null) {
+					$(prevElement).removeClass('paragraph-bookmark');
+				}
+				$(p).addClass('paragraph-bookmark');
+
+				if (prevElement !== null && prevElement == p) {
+					$(prevElement).removeClass('paragraph-bookmark');
+					prevElement = null;
+					delete pBookmark[chapterID];
+				} else prevElement = p;
+
+				myStorage.setItem('pBookmark', JSON.stringify(pBookmark));
+			});
+		});
+		// End of P Bookmark
+
 		const { charactersWithSpaces, charactersWithoutSpaces, words } = countCharacters(chapterContent.trim());
+
+		const readingSpeedValue = Math.round(words / readingSpeed).toString();
+		const readingSpeedFormat =
+			readingSpeedValue +
+			(readingSpeedValue[readingSpeedValue.length - 1] == 1
+				? ' минуту'
+				: readingSpeedValue[readingSpeedValue.length - 1] == 2
+				? ' минуты'
+				: ' минут');
 		const imagesCount = countImages(chapterElement);
-		const countText = `Символов: ${charactersWithSpaces}, Символов без пробелов: ${charactersWithoutSpaces}, Слов: ${words}, Картинок: ${imagesCount}`;
+		const countText = `Символов: ${charactersWithSpaces}, Символов без пробелов: ${charactersWithoutSpaces}, Слов: ${words}, Картинок: ${imagesCount}. 
+		<p> Примерное время чтения: ${readingSpeedFormat} </p>`;
 		chapterTitleElement.innerHTML = `${chapterText}<br><span style="font-size: 12px; color: #d4d4d4">${countText}</span>`;
 	}
 }
