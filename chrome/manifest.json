@@ -7,8 +7,13 @@
 		{
 			"matches": ["*://ranobehub.org/*"],
 			"js": ["jquery-3.7.0.min.js", "content.js"],
-			"css": ["styles.css"],
 			"run_at": "document_idle"
+		}
+	],
+	"web_accessible_resources": [
+		{
+			"resources": ["styles.css"],
+			"matches": ["*://ranobehub.org/*"]
 		}
 	]
 }

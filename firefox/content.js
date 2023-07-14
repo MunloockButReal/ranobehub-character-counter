@@ -1,5 +1,23 @@
-let readingSpeed = 180;
 myStorage = window.localStorage;
+// Doing this because stupid site overwriting my css. Why, chrome?
+const userAgent = window.navigator.userAgent.toLowerCase();
+
+if (userAgent.indexOf('chrome') > -1 && !!window.chrome) {
+	const link = document.createElement('link');
+	link.setAttribute('rel', 'stylesheet');
+	link.setAttribute('type', 'text/css');
+	link.setAttribute('href', chrome.runtime.getURL('styles.css'));
+	document.querySelector('head').appendChild(link);
+}
+console.log(userAgent);
+// User-customizable settings
+let readingSpeed = 180;
+let bookmarkBackgroundColor;
+let bookmarkTextColor;
+
+//
+//
+//
 
 // Function to count characters in a text
 function countCharacters(text) {
@@ -45,7 +63,12 @@ function updateChapterTitle(chapterElement) {
 		}
 
 		chapterAllP.forEach((p) => {
+			// $(p).append($(document.createElement('div')).addClass('paragraph-bookmark2'));
+
+			// $(p).on('click', () => {
 			$(p).on('click', () => {
+				// $(p).on('click', '.paragraph-bookmark2', () => {
+				console.log(p);
 				pBookmark[chapterID] = Array.from(chapterAllP).indexOf(p);
 
 				if (prevElement !== null) {
@@ -62,6 +85,7 @@ function updateChapterTitle(chapterElement) {
 				myStorage.setItem('pBookmark', JSON.stringify(pBookmark));
 			});
 		});
+
 		// End of P Bookmark
 
 		const { charactersWithSpaces, charactersWithoutSpaces, words } = countCharacters(chapterContent.trim());
@@ -76,7 +100,7 @@ function updateChapterTitle(chapterElement) {
 				: ' минут');
 		const imagesCount = countImages(chapterElement);
 		const countText = `Символов: ${charactersWithSpaces}, Символов без пробелов: ${charactersWithoutSpaces}, Слов: ${words}, Картинок: ${imagesCount}. 
-		<p> Примерное время чтения: ${readingSpeedFormat} </p>`;
+		<br> Примерное время чтения: ${readingSpeedFormat} </br>`;
 		chapterTitleElement.innerHTML = `${chapterText}<br><span style="font-size: 12px; color: #d4d4d4">${countText}</span>`;
 	}
 }
@@ -158,8 +182,7 @@ if (urlPatternBookPage.test(window.location.href)) {
 //
 //
 //
-//
-//
+
 /* 
 function apiText(chapterID) {
 	let returnData = '';
@@ -173,3 +196,17 @@ function apiText(chapterID) {
 
 console.log(apiText(30044));
  */
+
+// browserName = (function (agent) {        switch (true) {
+// 	case agent.indexOf("edge") > -1: return "MS Edge";
+// 	case agent.indexOf("edg/") > -1: return "Edge ( chromium based)";
+// 	case agent.indexOf("opr") > -1 && !!window.opr: return "Opera";
+// 	case agent.indexOf("chrome") > -1 && !!window.chrome: return "Chrome";
+// 	case agent.indexOf("trident") > -1: return "MS IE";
+// 	case agent.indexOf("firefox") > -1: return "Mozilla Firefox";
+// 	case agent.indexOf("safari") > -1: return "Safari";
+// 	default: return "other";
+// }
+// })(window.navigator.userAgent.toLowerCase());
+
+// console.log(browserName)

@@ -3,7 +3,29 @@
 	align-content: center;
 }
 
+body [data-container] p {
+	border-radius: 8px;
+	margin-bottom: 0.7em !important;
+	padding: 2px 5px;
+}
+
 .paragraph-bookmark {
 	background-color: #424242;
 	color: #d4d4d4;
+}
+
+@media only screen and (min-width: 800px) {
+	.container_text_book_styling blockquote {
+		background: none;
+		border: 1px gray solid !important;
+		margin: 10px 1px;
+	}
+}
+.containerForBookmarkArea {
+	position: relative;
+}
+
+.paragraph-bookmark2 {
+	height: 5px;
+	border: 1px solid gray;
 }
