@@ -15,5 +15,9 @@
 			"resources": ["styles.css"],
 			"matches": ["*://ranobehub.org/*"]
 		}
-	]
+	],
+	"action": {
+		"default_popup": "popup.html",
+		"default_title": "Default title"
+	}
 }
